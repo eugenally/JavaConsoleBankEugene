@@ -1,0 +1,33 @@
+package banking.step2;
+
+import java.util.Scanner;
+
+
+
+public interface ICustomDefine {
+	// 메뉴 번호 상수
+    int MAKE=1, DEPOSIT=2, WITHDRAW=3, INQUIRE=4, EXIT=5;
+
+    // 신용등급 상수
+    int GRADE_A = 1;
+    int GRADE_B = 2;
+    int GRADE_C = 3;
+
+    // 등급별 이자율 상수 (double)
+    double INTEREST_A = 0.07;  // 7%
+    double INTEREST_B = 0.04;  // 4%
+    double INTEREST_C = 0.02;  // 2%
+
+    // 메서드 규칙 정의
+    void showMenu();
+    void makeAccount();
+    void depositMoney();
+    void withdrawMoney();
+    void showAccInfo();
+	
+	
+	
+	
+	
+	
+}
