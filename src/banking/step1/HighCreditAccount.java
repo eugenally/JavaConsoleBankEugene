@@ -13,9 +13,9 @@ public class HighCreditAccount extends Account {
     }
 
     public void showAccInfo() {
-    	System.out.println("계좌번호: "  + account);
-    	System.out.println("이름: "     + name);
-    	System.out.println("잔고: "     + balance);
+    	System.out.println("계좌번호: "  + getAccount());
+    	System.out.println("이름: "     + getName());
+    	System.out.println("잔고: "     + getBalance());
     	System.out.println("이율: "     + (interast * 100) + "%");
     }
 }
