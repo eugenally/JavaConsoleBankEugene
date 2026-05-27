@@ -1,21 +1,22 @@
-package banking.step2;
+package banking.step2.geltle;
 
 import java.io.Serializable;
 
 
 
-abstract public class Account
-	implements Serializable {
+abstract public class Account {
 		//
 		private String account;
 		private String name;
 		private int balance;  // String → int
+		private double interast;
 		
 		
-		public Account(String account, String name, int balance) {
+		public Account(String account, String name, int balance, double interast) {
 	        this.account = account;
 	        this.name    = name;
 	        this.balance = balance;
+	        this.interast = interast;
 	    }
 
 	    public abstract void showAccInfo();   // 하위 클래스가 반드시 구현
@@ -27,7 +28,13 @@ abstract public class Account
 	    public String getName()             { return name; }
 	    public int    getBalance()          { return balance; }
 	    public void   setBalance(int bal)   { this.balance = bal; }
-		
+	    public double getInterast()         { return interast; }
+	    public void  setInterast(double inte)  { this.interast = inte; }
+
+		public double getTotalInterast() {
+			
+			return getInterast();//기본 이율 반환
+		}
 		
 		
 		

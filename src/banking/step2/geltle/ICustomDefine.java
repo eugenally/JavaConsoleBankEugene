@@ -1,4 +1,4 @@
-package banking.step2;
+package banking.step2.geltle;
 
 import java.util.Scanner;
 
@@ -14,9 +14,9 @@ public interface ICustomDefine {
     int GRADE_C = 3;
 
     // 등급별 이자율 상수 (double)
-    double INTEREST_A = 0.07;  // 7%
-    double INTEREST_B = 0.04;  // 4%
-    double INTEREST_C = 0.02;  // 2%
+    double INTERAST_A = 0.07;  // 7%
+    double INTERAST_B = 0.04;  // 4%
+    double INTERAST_C = 0.02;  // 2%
 
     // 메서드 규칙 정의
     void showMenu();
@@ -25,9 +25,6 @@ public interface ICustomDefine {
     void withdrawMoney();
     void showAccInfo();
 	
-	
-	
-	
-	
+
 	
 }

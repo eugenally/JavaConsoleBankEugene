@@ -1,4 +1,4 @@
-package banking.step2;
+package banking.step2.geltle;
 
 import java.util.Scanner;
 
@@ -17,11 +17,10 @@ public class BankingSystemMain {
 		
 	}
 	
-	//github연동
-	//연동 완료후 커밋 & 푸시
+	
 	public static void main(String[] args) {
 		
-		AccountManager mng = new AccountManager(100);
+		AccountManager mng = new AccountManager(50);
 		
 		while(true) {
 			menuShow();
@@ -31,15 +30,19 @@ public class BankingSystemMain {
 				
 				switch (choice) {
 				case 1: 
+					System.out.println("***신규계좌개설***");
 					mng.makeAccount();
 					break;
 				case 2:
+					System.out.println("***입   금***");
 					mng.depositMoney();
 					break;
 				case 3:
+					System.out.println("***출   금***");
 					mng.withdrawMoney();
 					break;
 				case 4:
+					System.out.println("***계좌정보출력***");
 					mng.showAccInfo();
 					break;		
 				case 5:
