@@ -30,7 +30,7 @@ public class BankingSystemMain {
 				
 				switch (choice) {
 				case 1: 
-					mng.makeAccount();
+					mng.makeAccount(choice);
 					break;
 				case 2:
 					mng.depositMoney();
