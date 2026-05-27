@@ -17,7 +17,7 @@ public class BankingSystemMain {
 		
 	}
 	
-	
+	//github연동
 	public static void main(String[] args) {
 		
 		AccountManager mng = new AccountManager(100);
