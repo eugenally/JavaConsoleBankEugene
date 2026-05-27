@@ -18,7 +18,7 @@ abstract public class Account implements ICustomDefine {
 	        this.balance = balance;
 	        this.interast = interast;
 	    }
-
+		@Override
 	    public abstract void showAccInfo();   // 하위 클래스가 반드시 구현
 	    /*
 	    맴버변수 name이 private로 선언되어 외부에서는 접근을 허용하지 아

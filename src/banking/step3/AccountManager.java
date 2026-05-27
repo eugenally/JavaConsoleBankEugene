@@ -18,7 +18,16 @@ public class AccountManager implements ICustomDefine {
 	
 	
 	@Override
-	public void showMenu() {}
+	public void showMenu() {
+		  System.out.println("-----Menu------");
+		  System.out.println(MAKE     + ".계좌개설");
+		  System.out.println(DEPOSIT  + ".입\t금");
+		  System.out.println(WITHDRAW + ".출\t금");
+		  System.out.println(INQUIRE  + ".계좌정보출력");
+		  System.out.println(EXIT     + ".프로그램종료");
+		  System.out.print("선택:");
+		
+	}
 
 	@Override
 	public void makeAccount() {

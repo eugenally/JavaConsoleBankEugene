@@ -1,6 +1,6 @@
 package banking.step3;
 
-public class HighCreditAccount extends Account implements ICustomDefine{
+public abstract class HighCreditAccount extends Account {
 	
 //    private double interast;  // 최종 이율 (기본이율 + 등급별 추가이율)
 //    private int grade;        // 신용등급 (1=A, 2=B, 3=C)
@@ -31,7 +31,7 @@ public class HighCreditAccount extends Account implements ICustomDefine{
     public double getTotalInterast() {
         return getInterast() + gradeInterast;
     }
-
+    @Override
     public void showAccInfo() {
     	System.out.println("계좌번호: "  + getAccount());
     	System.out.println("이름: "     + getName());

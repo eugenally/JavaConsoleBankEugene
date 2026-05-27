@@ -1,12 +1,13 @@
 package banking.step3;
 
-public class NormalAccount extends Account implements ICustomDefine{
+public abstract class NormalAccount extends Account {
 	
     public NormalAccount(String account, String name, int balance, double interast) {
     	
     	super(account, name, balance, interast); 
 
     }
+    @Override
     public void showAccInfo() {
         System.out.println("계좌번호: "  + getAccount());
         System.out.println("이름: "     + getName());

@@ -49,8 +49,13 @@ public class BankingSystemMain {
 					System.out.println("프로그램 종료");
 					return;
 					}
+				if (choice < ICustomDefine.MAKE || choice > ICustomDefine.EXIT) {
+				    throw new MenuSelectException(choice + "는 잘못된 메뉴입니다.");
+				}
 			}	
-			
+			catch (MenuSelectException e) {
+				    System.out.println("[메뉴오류] " + e.getMessage());
+			}
 			catch (java.util.InputMismatchException e) {
 		            // 문자 입력 시
 		            System.out.println("[입력오류] 숫자만 입력 가능합니다.");
