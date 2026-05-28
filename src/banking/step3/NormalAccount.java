@@ -1,6 +1,6 @@
 package banking.step3;
 
-public abstract class NormalAccount extends Account {
+public class NormalAccount extends Account {
 	
     public NormalAccount(String account, String name, int balance, double interast) {
     	

@@ -1,6 +1,6 @@
 package banking.step3;
 
-public abstract class HighCreditAccount extends Account {
+public class HighCreditAccount extends Account {
 	
 //    private double interast;  // 최종 이율 (기본이율 + 등급별 추가이율)
 //    private int grade;        // 신용등급 (1=A, 2=B, 3=C)
