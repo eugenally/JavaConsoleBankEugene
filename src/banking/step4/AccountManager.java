@@ -1,6 +1,7 @@
 package banking.step4;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 
@@ -12,12 +13,14 @@ public class AccountManager implements ICustomDefine {
 //	private Account[] myAccounts;
 //	private int numOfAccounts;
 	private ArrayList<Account> myAccounts;
+//	private HashSet<Account> myAccounts;
 	
-	
-	public AccountManager(int num) {
+	// 인자(num)를 받지 않는 기본 생성자로 수정
+	public AccountManager() {
 //        myAccounts    = new Account[num];
 //        numOfAccounts = 0;
 		myAccounts    = new ArrayList<>();
+//		myAccounts    = new HashSet<Account>();
 	}
 	
 	
@@ -28,6 +31,7 @@ public class AccountManager implements ICustomDefine {
 		  System.out.println(DEPOSIT  + ".입\t금");
 		  System.out.println(WITHDRAW + ".출\t금");
 		  System.out.println(INQUIRE  + ".계좌정보출력");
+		  System.out.println(DELETE  + ".계좌삭제");
 		  System.out.println(EXIT     + ".프로그램종료");
 		  System.out.print("선택:");
 		
@@ -50,6 +54,8 @@ public class AccountManager implements ICustomDefine {
 		double iInterast = BankingSystemMain.scan.nextInt()/100.0;
 		BankingSystemMain.scan.nextLine();
 		
+	    // 새 계좌 인스턴스 생성
+	    Account newAcc = null;
 		if(choice == 1) {
 			System.out.println("일반계좌 개설:");
 	        myAccounts.add(
@@ -74,9 +80,25 @@ public class AccountManager implements ICustomDefine {
 		    		new HighCreditAccount(iAcc, iName, iBalance, iInterast, grade));
 		    System.out.println("신용계좌 개설 완료");
 		} 
-		else {	
-			System.out.println("잘못된 선택입니다.");
-	    
+		// HashSet.add() 시도 → 중복이면 false 반환
+	    boolean added = myAccounts.add(newAcc);
+
+	    if (!added) {
+	        // 중복 계좌 발견
+	        System.out.println("중복계좌발견됨. 덮어쓸까요? (y or n)");
+	        String answer = BankingSystemMain.scan.nextLine().toLowerCase();
+
+	        if (answer.equals("y")) {
+	            myAccounts.remove(newAcc);  // 기존 계좌 삭제
+	            myAccounts.add(newAcc);     // 새 계좌 추가
+	            System.out.println("기존 계좌를 덮어썼습니다.");
+	        } else {
+	            System.out.println("기존 계좌 정보를 유지합니다.");
+	        }
+	    }
+	    else {
+	        System.out.println("계좌계설이 완료되었습니다.");
+	   	    
 		}
 		
 	}
@@ -87,36 +109,48 @@ public class AccountManager implements ICustomDefine {
 
 //	    for (int i = 0; i < numOfAccounts; i++) {
 //	        if (myAccounts[i].getAccount().equals(accNum)) {
-	    for (Account acc : myAccounts) {
-	        if (acc.getAccount().equals(iAcc)) {
-	        	try {
-		            System.out.print("입금액: ");
-		            int amount = BankingSystemMain.scan.nextInt();//
-		            BankingSystemMain.scan.nextLine();
-		            
-		            if(amount < 0) {
-		            	System.out.println("[입금오류] 음수는 입금할 수 없습니다.");
-	                    return;
+//	    for (Account acc : myAccounts) {
+	    	
+	    Iterator<Account> itr = myAccounts.iterator();
+	        while (itr.hasNext()) {
+	            Account acc = itr.next();	
+		        if (acc.getAccount().equals(iAcc)) {
+		        	try {
+			            System.out.print("입금액: ");
+			            int amount = BankingSystemMain.scan.nextInt();//
+			            BankingSystemMain.scan.nextLine();
+			            
+			            if(amount < 0) {
+			            	System.out.println("[입금오류] 음수는 입금할 수 없습니다.");
+		                    return;
+			            }
+			            if (amount % 500 != 0) {
+		                    System.out.println("[입금오류] 입금액은 500원 단위만 가능합니다.");
+		                 
+		                    return;
+		                }
+			            
+			            
+			        }
+			        catch (java.util.InputMismatchException e) {
+		                // 문자 입력 시
+		                System.out.println("[입력오류] 숫자만 입력 가능합니다.");
+		                BankingSystemMain.scan.nextLine();  // 버퍼 비우기
+			        }
+		        	//합산, 잔고
+//		            int newBalance = acc.getBalance() + amount;
+//		            double totalInterast = acc.getTotalInterast();  // 기본+등급이율
+//		            newBalance = (int)(newBalance * (1 + totalInterast));
+//		            acc.setBalance(newBalance); // 반드시 저장
+//		            System.out.println("입금 완료. 잔고: " + acc.getBalance());
+		        	for (Account acc : myAccounts) {
+		                if (acc.getAccount().equals(iAcc)) {
+		                    int interest = (int)(acc.getBalance() * acc.getTotalInterast());
+		                    acc.setBalance(acc.getBalance() + interest + amount);
+		                    System.out.println("입금 완료. 잔고: " + acc.getBalance());
+		                    return;
+		                }
 		            }
-		            if (amount % 500 != 0) {
-	                    System.out.println("[입금오류] 입금액은 500원 단위만 가능합니다.");
-	                 
-	                    return;
-	                }
-		            //합산, 잔고
-		            int newBalance = acc.getBalance() + amount;
-		            double totalInterast = acc.getTotalInterast();  // 기본+등급이율
-		            newBalance = (int)(newBalance * (1 + totalInterast));
-		            acc.setBalance(newBalance); // 반드시 저장
-		            System.out.println("입금 완료. 잔고: " + acc.getBalance());
-		            
-		        }
-		        catch (java.util.InputMismatchException e) {
-	                // 문자 입력 시
-	                System.out.println("[입력오류] 숫자만 입력 가능합니다.");
-	                BankingSystemMain.scan.nextLine();  // 버퍼 비우기
-		        }
-	        	return;
 		    }
 	    }
 	    System.out.println("계좌를 찾을 수 없습니다.");
@@ -127,7 +161,10 @@ public class AccountManager implements ICustomDefine {
 		System.out.print("출금할 계좌번호: ");
 	    String accNum = BankingSystemMain.scan.nextLine();
 	    
-	    for (Account acc : myAccounts) {
+//	    for (Account acc : myAccounts) {
+	    Iterator<Account> itr = myAccounts.iterator();
+	    while (itr.hasNext()) {
+	        Account acc = itr.next();
 	        if (acc.getAccount().equals(accNum)) {
 	        	try {
 		            System.out.print("출금액: ");
@@ -166,14 +203,23 @@ public class AccountManager implements ICustomDefine {
 	                }
 		            
 		            
-		            acc.setBalance(acc.getBalance() - amount);
-		            System.out.println("출금 완료. 잔고: " + acc.getBalance());
-		            return;
+		          
 	        	}
 	        	catch (java.util.InputMismatchException e) {
 	                System.out.println("[입력오류] 숫자만 입력 가능합니다.");
 	                BankingSystemMain.scan.nextLine();  // 버퍼 비우기
+	                return;
 	            }
+//	        	acc.setBalance(acc.getBalance() - amount);
+//		        System.out.println("출금 완료. 잔고: " + acc.getBalance());
+//		        return;
+		        for (Account acc : myAccounts) {
+	                if (acc.getAccount().equals(iAcc)) {
+	                    
+	                    acc.setBalance(acc.getBalance() - amount);
+	                    System.out.println("출금 완료. 잔고: " + acc.getBalance());
+	                    return;
+	                }
 	        }
 	    }
 	    System.out.println("계좌를 찾을 수 없습니다.");
@@ -187,14 +233,41 @@ public class AccountManager implements ICustomDefine {
 	        return;
 	    }
 
-	    // 향상된 for문으로 모든 계좌 출력
-	    for (Account acc : myAccounts) {
-	        acc.showAccInfo();
+	    
+//	    for (Account acc : myAccounts) {
+	    Iterator<Account> itr = myAccounts.iterator();
+	    while (itr.hasNext()) {
+	    	itr.next().showAccInfo();
 	        System.out.println("--------------------");
 	    }
 		System.out.println("전체계좌정보 출력이 완료되었습니다.");
 	}	
+// 삭제 추가
+	public void deleteAcc() {
+		//System.out.println("##deleteInfo 호출됨");
+		Scanner scan = new Scanner(System.in);
+		System.out.print("검색할 이름을 입력하세요");
+		String deleteAccount = scan.nextLine();
+		//삭제할 인스턴스 확인용 변수
+		int deleteIndex = -1;
+		//확장 for문으로 갯수만큼 반복
+				
+//		for(Account acc : myAccounts) {
+			//삭제한 이름이 있는지 검색
+		Iterator<Account> itr = myAccounts.iterator();
+	    while (itr.hasNext()) {
+	        Account acc = itr.next();
+			if(deleteAccount.equals(acc.getName())) {
 
-	
-
+				itr.remove(); // 💡 Iterator의 remove()를 사용해야 안전하게 지워집니다.
+				//참조값을통해 삭제
+//				myAccounts.remove(acc);
+				
+				//샂제되었다면 확인 용으로 변수를 변경
+				deleteIndex = 0;
+				//삭제 되면 즉시 탈출
+				break;
+			}
+		}
+	}
 }

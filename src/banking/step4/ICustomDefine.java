@@ -4,7 +4,7 @@ package banking.step4;
 
 public interface ICustomDefine {
 	// 메뉴 번호 상수
-    int MAKE=1, DEPOSIT=2, WITHDRAW=3, INQUIRE=4, EXIT=5;
+    int MAKE=1, DEPOSIT=2, WITHDRAW=3, INQUIRE=4, DELETE=5, EXIT=6;
 
     // 신용등급 상수
     int GRADE_A = 1, GRADE_B = 2, GRADE_C = 3;

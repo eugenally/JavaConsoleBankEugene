@@ -18,6 +18,17 @@ abstract  public class Account implements ICustomDefine {
 	        this.balance = balance;
 	        this.interast = interast;
 	    }
+		
+		// equals()를 오버라이딩하면 hashCode()도 반드시 같이 오버라이딩
+	    @Override
+	    public int hashCode() {
+	        return account.hashCode();  // 계좌번호 기반 해시코드
+	    }
+	    
+	    
+	    
+	    
+	    
 		@Override
 	    public abstract void showAccInfo();   // 하위 클래스가 반드시 구현
 		
