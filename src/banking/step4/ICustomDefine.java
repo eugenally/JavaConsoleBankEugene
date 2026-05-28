@@ -20,7 +20,7 @@ public interface ICustomDefine {
     void depositMoney();
     void withdrawMoney();
     void showAccInfo();
-	
+    void deleteAcc();  // 삭제 메서드 추가
 
 	
 }

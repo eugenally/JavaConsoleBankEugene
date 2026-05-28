@@ -48,7 +48,7 @@ public class BankingSystemMain {
 					break;	
 				case 5:
 					System.out.println("***계좌정보삭제***");//추가
-					mng.showAccInfo();
+					mng.deleteAcc();
 					break;
 				case 6:
 					System.out.println("프로그램 종료");
