@@ -3,7 +3,8 @@ package banking.step4;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Iterator;
-///깃허브 클론작업 성공
+
+
 public class BankingSystemMain implements ICustomDefine {
 
 	public static Scanner scan =new Scanner(System.in);
