@@ -1,4 +1,4 @@
-package banking.step5;
+package banking.step6;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -39,7 +39,7 @@ public class AccountManager implements ICustomDefine {
 
 	@Override
 	public void makeAccount() {
-		System.out.println("1. 일반계좌  2. 신용신뢰계좌");
+		System.out.println("1. 일반계좌  2. 신용신뢰계좌  3. 특판계좌");
 		int choice = BankingSystemMain.scan.nextInt();  // 
 		BankingSystemMain.scan.nextLine(); // 버퍼 청소
 	    		
@@ -71,7 +71,7 @@ public class AccountManager implements ICustomDefine {
 	        System.out.println("일반계좌 개설 완료");
  		
 		}
-		else if (choice == 2) {
+		if (choice == 2) {
 			System.out.print("신용신뢰계좌: ");
 			System.out.print("신용등급(A,B,C등급): ");
             String grade = BankingSystemMain.scan.nextLine().toUpperCase();  // 문자 입력
@@ -88,6 +88,15 @@ public class AccountManager implements ICustomDefine {
 		    		new HighCreditAccount(iAcc, iName, iBalance, iInterast, grade);
 		    System.out.println("신용계좌 개설 완료");
 		} 
+		else if(choice == 3) {
+			System.out.println("특판계좌 개설:");
+		    System.out.print("기본이자%(정수형태로입력):");
+		    iInterast = BankingSystemMain.scan.nextInt() / 100.0;
+		    BankingSystemMain.scan.nextLine(); 
+		    
+		    newAcc = new SpecialAccount(iAcc, iName, iBalance, iInterast);
+		    System.out.println("특판계좌 개설 완료");
+		}
 		else {
 			System.out.println("잘못된 선택입니다.");
 			return;
@@ -157,24 +166,43 @@ public class AccountManager implements ICustomDefine {
 				return; // 메서드 종료 (아래 입금 로직을 실행하지 않고 안전하게 빠져나감)
 		}
     	try {
-        System.out.print("입금액: ");
-        int amount = BankingSystemMain.scan.nextInt();//
-        BankingSystemMain.scan.nextLine();
-        
-        if(amount < 0) {
-        	System.out.println("[입금오류] 음수는 입금할 수 없습니다.");
-            return;
-        }
-        if (amount % 500 != 0) {
-            System.out.println("[입금오류] 입금액은 500원 단위만 가능합니다.");
-         
-            return;
-        }    
-    
-        int interest = (int)(targetAcc.getBalance() * targetAcc.getTotalInterast());
-        targetAcc.setBalance(targetAcc.getBalance() + interest + amount);
-        System.out.println("입금 완료. 잔고: " + targetAcc.getBalance());
-        return;
+	        System.out.print("입금액: ");
+	        int amount = BankingSystemMain.scan.nextInt();//
+	        BankingSystemMain.scan.nextLine();
+	        
+	        if(amount < 0) {
+	        	System.out.println("[입금오류] 음수는 입금할 수 없습니다.");
+	            return;
+	        }
+	        if (amount % 500 != 0) {
+	            System.out.println("[입금오류] 입금액은 500원 단위만 가능합니다.");
+	         
+	            return;
+	        }    
+	        // 1. 공통 이자 계산 (Normal, HighCredit, Special 모두 기본적으로 수행)
+	        int interest = (int)(targetAcc.getBalance() * targetAcc.getTotalInterast());
+	        targetAcc.setBalance(targetAcc.getBalance() + interest + amount);
+	        System.out.println("입금 완료. 잔고: " + targetAcc.getBalance());
+	        
+	      // B. '최종 입금 대상 금액'을 담을 변수 선언 (기본값 = 이자 + 사용자가 입력한 입금액)
+	     			int totalDeposit = interest + amount;
+	        
+	        // 2. 💡 찾은 계좌가 '특판계좌(SpecialAccount)'인지 확인
+	        if (targetAcc instanceof SpecialAccount) {
+	            SpecialAccount specAcc = (SpecialAccount) targetAcc; // 형변환
+	            
+	            // 입금 회차 1 증가 (이제 이번 입금이 몇 회차인지 반영됨)
+	            specAcc.incrementDepositCount(); 
+	            
+	            // 짝수 번째 입금인지 판별 (2, 4, 6...)
+	            if (specAcc.getDepositCount() % 2 == 0) {
+	                totalDeposit += 500; // 💡 축하금 500원 추가 수당 지급!
+	                System.out.println("🎉 [특판축하금] 짝수번째 입금 기념 500원이 추가 지급되었습니다!");
+	            }
+	        }
+	        // 3. 최종 계산된 금액을 잔고에 반영
+	        targetAcc.setBalance(targetAcc.getBalance() + totalDeposit);
+	        System.out.println("입금 완료되었습니다.");
 
 	    }
     	catch (java.util.InputMismatchException e) {
@@ -191,18 +219,9 @@ public class AccountManager implements ICustomDefine {
 		System.out.print("출금할 계좌번호: ");
 	    String iAcc = BankingSystemMain.scan.nextLine();
 	    
+	 // 1. Iterator를 통해 목록에서 일치하는 계좌 검색
 	    Iterator<Account> itr = myAccounts.iterator();
 	    Account targetAcc = null;
-//	    Account acc = findByAccount(iAcc);
-//	    if (acc == null) {
-//	    	System.out.println("오류: 입력하신 계좌번호를 찾을 수 없습니다.");
-//	    	return;
-//	    }
-//	    
-//	    for (Account acc : myAccounts) {
-	    
-	    
-	    
 	    
 	    while (itr.hasNext()) {
 	    	Account acc = itr.next();
@@ -211,16 +230,17 @@ public class AccountManager implements ICustomDefine {
 	            break;
 	        }
 	    }
+	 // 2. 💡 [안전장치 1] 계좌를 찾지 못했다면 여기서 즉시 차단하고 메서드 종료
 	    if (targetAcc == null) {
 	    	System.out.println("오류: 입력하신 계좌번호를 찾을 수 없습니다.");
 	    	return;
 	    }    	
 	        	
-	        	
+	 // 3. 계좌가 확실히 존재할 때만 출금 금액 입력 및 연산 진행  	
 	    try {	
             System.out.print("출금액: ");
             int amount = BankingSystemMain.scan.nextInt();
-            BankingSystemMain.scan.nextLine();
+            BankingSystemMain.scan.nextLine();// 💡 [필수] nextInt() 직후 버퍼 청소!
             
             // 음수 체크 (if문)
             if (amount < 0) {
@@ -231,7 +251,6 @@ public class AccountManager implements ICustomDefine {
             // 1000원 단위 체크 (if문)
             if (amount % 1000 != 0) {
                 System.out.println("[출금오류] 출금액은 1000원 단위만 가능합니다.");
-                
                 return;
             }
 
@@ -251,21 +270,21 @@ public class AccountManager implements ICustomDefine {
                     // 출금 취소
                     System.out.println("출금요청이 취소되었습니다.");
                 }
-                return; 
-            }
+                
+                    return;
+	            }
             if (targetAcc.getAccount().equals(iAcc)) {
-                	targetAcc.setBalance(targetAcc.getBalance() - amount);
-                    System.out.println("출금 완료. 잔고: " + targetAcc.getBalance());
-                    
-            }
-                       
+            	targetAcc.setBalance(targetAcc.getBalance() - amount);
+                System.out.println("출금 완료. 잔고: " + targetAcc.getBalance());
+            } 
+	    
         }  
-	    catch (java.util.InputMismatchException e) {
+    	catch (java.util.InputMismatchException e) {
             System.out.println("[입력오류] 숫자만 입력 가능합니다.");
             BankingSystemMain.scan.nextLine();  // 버퍼 비우기
-          
+            return;
     	}
-	    
+	   
     }
         	
 //	        	acc.setBalance(acc.getBalance() - amount);
@@ -333,7 +352,7 @@ public class AccountManager implements ICustomDefine {
 			//3직렬화를 위한 인스턴스 생성- 스트림 생성 file 로 생성후 object로 감쌈
 			ObjectOutputStream out = new ObjectOutputStream(
 					new FileOutputStream(
-							"src/banking/step5/myAccount_info.obj"));
+							"src/banking/step6/myAccount_info.obj"));
 //			//1리스트에 저장된  정보를 For문으로 반복
 //			for(Account acc : myAccounts) {
 //				//2연락처 정보를 저장-데이터 쓰기
@@ -353,7 +372,7 @@ public class AccountManager implements ICustomDefine {
 			//3직렬화를 위한 인스턴스 생성- 스트림 생성 file 로 생성후 object로 감쌈
 			ObjectInputStream in = new ObjectInputStream(
 					new FileInputStream(
-							"src/banking/step5/myAccount_info.obj"));
+							"src/banking/step6/myAccount_info.obj"));
 			myAccounts = (ArrayList<Account>) in.readObject();
 			//몇개의 정보인지 알 수 없으므로 무한루프 로 구성
 			while(true) {
