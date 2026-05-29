@@ -7,7 +7,8 @@ public class HighCreditAccount extends Account {
 	
     public HighCreditAccount(String account, String name, int balance, double interast, String grade) {
     	super(account, name, balance, interast);  // 부모 Account 생성자 호출
-    	this.grade = grade;
+    	// 문자열 앞뒤 공백을 제거(.trim())하여 등급 비교가 확실하게 작동하도록 안전장치를 추가
+    	this.grade = grade.trim();
         
     	// 등급별 추가이율 설정
         if (grade.equals("A"))      this.gradeInterast = ICustomDefine.INTERAST_A;
@@ -18,6 +19,7 @@ public class HighCreditAccount extends Account {
     }
     @Override
     public double getTotalInterast() {
+    	// 기본 이율 + 신용등급 추가 이율 반환
         return getInterast() + gradeInterast;
     }
     @Override
@@ -26,7 +28,8 @@ public class HighCreditAccount extends Account {
     	System.out.println("이름: "     + getName());
     	System.out.println("잔고: "     + getBalance());
     	System.out.println("신용등급: " + grade);   // A/B/C 문자로 출력 gradeToString()
-    	System.out.println("이율: "     + (getInterast()  * 100) + "%");
+    	// 💡 수정 포인트: getInterast() 대신 최종 합산 이율인 getTotalInterast()를 호출
+    	System.out.println("이율: "     + (getTotalInterast()  * 100) + "%");
     }
     
 }
