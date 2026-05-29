@@ -10,7 +10,7 @@ public class BankingSystemMain implements ICustomDefine {
 	
 	@Override
 	public void showMenu(){
-		System.out.println("########인터넷 뱅킹(ver04)#########");
+		System.out.println("########인터넷 뱅킹(ver05)#########");
 		System.out.print(MAKE     +"1.계좌계설 ");
 		System.out.println(DEPOSIT  +"2.입금");
 		System.out.print(WITHDRAW +"3.출금 ");
@@ -27,6 +27,9 @@ public class BankingSystemMain implements ICustomDefine {
 		AccountManager mng = new AccountManager();
 		// 1. BankingSystemMain 인스턴스를 생성합니다.
 	    BankingSystemMain mainSystem = new BankingSystemMain();
+	    
+	 // [추가] 프로그램 시작 시 데이터 불러오기
+	    mng.readAccInfo();
 	    
 		while(true) {
 //			mng.showMenu(); // menuShow() 대신 인터페이스 메서드 사용
@@ -60,6 +63,8 @@ public class BankingSystemMain implements ICustomDefine {
 					mng.deleteAcc();
 					break;
 				case 6:
+					// [추가] 프로그램 종료 전 파일에 저장하기
+                    mng.saveAccInfo();
 					System.out.println("프로그램 종료");
 					return;
 					}
@@ -82,4 +87,6 @@ public class BankingSystemMain implements ICustomDefine {
     @Override public void withdrawMoney() {}
     @Override public void showAccInfo() {}
     @Override public void deleteAcc() {}
+    @Override public void saveAccInfo(){}
+    @Override public void readAccInfo(){}
 }

@@ -1,10 +1,12 @@
 package banking.step5;
 
+import java.io.Serializable;
 
-
-
-
-abstract  public class Account  {
+//implements Serializable 추가
+abstract  public class Account implements Serializable {
+	// 내부 자식 클래스들의 호환성을 위한 버전 ID 선언 (권장)
+    private static final long serialVersionUID = 1L;
+		
 		//
 		private String account;
 		private String name;

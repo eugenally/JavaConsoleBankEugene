@@ -21,6 +21,7 @@ public interface ICustomDefine {
     void withdrawMoney();
     void showAccInfo();
     void deleteAcc();  // 삭제 메서드 추가
-
+    void saveAccInfo();
+    void readAccInfo();
 	
 }

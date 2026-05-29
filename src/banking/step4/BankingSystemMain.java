@@ -11,12 +11,12 @@ public class BankingSystemMain implements ICustomDefine {
 	@Override
 	public void showMenu(){
 		System.out.println("########인터넷 뱅킹(ver04)#########");
-		System.out.print(MAKE     +"1.계좌계설 ");
-		System.out.println(DEPOSIT  +"2.입금");
-		System.out.print(WITHDRAW +"3.출금 ");
-		System.out.println(INQUIRE  +"4.전체계좌정보출력");
-		System.out.println(DELETE  +"5.계좌정보삭제");//추가
-		System.out.println(EXIT     +"6.프로그램 종료 ");
+		System.out.print(MAKE        +"1.계좌계설 ");
+		System.out.println(DEPOSIT   +"2.입금");
+		System.out.print(WITHDRAW    +"3.출금 ");
+		System.out.println(INQUIRE   +"4.전체계좌정보출력");
+		System.out.println(DELETE    +"5.계좌정보삭제");//추가
+		System.out.println(EXIT      +"6.프로그램 종료 ");
 		System.out.println("메뉴선택>>>> ");
 		
 	}

@@ -1,8 +1,16 @@
 package banking.step5;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
+
+import banking.step4.Account;
 
 
 public class AccountManager implements ICustomDefine {
@@ -52,8 +60,9 @@ public class AccountManager implements ICustomDefine {
 	    Account newAcc = null;
 		if(choice == 1) {
 			System.out.println("일반계좌 개설:");
-	        myAccounts.add(
-	        		new NormalAccount(iAcc, iName, iBalance, iInterast));
+//	        myAccounts.add(
+//	        		new NormalAccount(iAcc, iName, iBalance, iInterast));
+			newAcc = new NormalAccount(iAcc, iName, iBalance, iInterast);
 	        System.out.println("일반계좌 개설 완료");
  		
 		}
@@ -269,4 +278,53 @@ public class AccountManager implements ICustomDefine {
 			}
 		}
 	}
+
+	public void saveAccInfo() {
+		try {
+			//3직렬화를 위한 인스턴스 생성- 스트림 생성 file 로 생성후 object로 감쌈
+			ObjectOutputStream out = new ObjectOutputStream(
+					new FileOutputStream(
+							"src/banking/step5/myAccount_info.obj"));
+//			//1리스트에 저장된  정보를 For문으로 반복
+//			for(Account acc : myAccounts) {
+//				//2연락처 정보를 저장-데이터 쓰기
+//				out.writeObject(acc);
+			// ✅ 리스트 통째로 저장
+	        out.writeObject(myAccounts);
+	        out.close();
+	        System.out.println("계좌 정보가 파일에 저장되었습니다.");
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void readAccInfo() {
+		try {
+			//3직렬화를 위한 인스턴스 생성- 스트림 생성 file 로 생성후 object로 감쌈
+			ObjectInputStream in = new ObjectInputStream(
+					new FileInputStream(
+							"src/banking/step5/myAccount_info.obj"));
+			//몇개의 정보인지 알 수 없으므로 무한루프 로 구성
+			while(true) {
+//				//Object 타입으로 저장된 정보를 인출 한 후 다운캐스팅
+//				Account acc = (Account)in.readObject();
+//				myAccounts.add(acc);
+				try {
+	                Account acc = (Account) in.readObject();
+	                myAccounts.add(acc);
+	            } 
+				catch (EOFException e) {
+	                // 파일의 끝에 도달하면 반복문 탈출
+	                break;
+				}
+		
+			}
+			System.out.println("기존 계좌 정보를 파일에서 성공적으로 불러왔습니다.");
+		}
+		catch (IOException | ClassNotFoundException e) {
+			System.out.println("파일을 읽어오는 중 오류가 발생했습니다: " + e.getMessage());
+		}
+	}
+	
 }
